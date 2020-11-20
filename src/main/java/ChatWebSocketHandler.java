@@ -18,11 +18,19 @@ public class ChatWebSocketHandler {
         String username = Chat.userUsernameMap.get(user);
         Chat.userUsernameMap.remove(user);
         Chat.broadcastMessage(sender = "Server", msg = (username + " left the chat"));
+        Base64FileUtils.deleteAll("src/main/resources/public/img");
     }
 
     @OnWebSocketMessage
+    //前端发来的msg
     public void onMessage(Session user, String message) {
-        Chat.broadcastMessage(sender = Chat.userUsernameMap.get(user), msg = message);
+        System.out.println(message);
+        //一个简单的判断发来的是json还是字符串
+        if (message.contains("'filename'")) {
+            Chat.broadcastFile(sender = Chat.userUsernameMap.get(user), msg = message);
+        } else {
+            Chat.broadcastMessage(sender = Chat.userUsernameMap.get(user), msg = message);
+        }
     }
 
 }
