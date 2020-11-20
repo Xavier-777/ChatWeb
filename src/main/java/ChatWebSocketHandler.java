@@ -18,7 +18,9 @@ public class ChatWebSocketHandler {
         String username = Chat.userUsernameMap.get(user);
         Chat.userUsernameMap.remove(user);
         Chat.broadcastMessage(sender = "Server", msg = (username + " left the chat"));
+        //清理数据
         Base64FileUtils.deleteAll("src/main/resources/public/img");
+        Base64FileUtils.deleteAll("src/main/resources/public/file");
     }
 
     @OnWebSocketMessage

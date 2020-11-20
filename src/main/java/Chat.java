@@ -49,30 +49,54 @@ public class Chat {
     //广播文件
     public static void broadcastFile(String sender, String message) {
         JSONObject parseMsg = new JSONObject(message);
-        String filename = (String) parseMsg.get("filename");
+        String filename = (String) parseMsg.get("filename");//文件名
         String file = (String) parseMsg.get("file");//这个file以base64的形式传递
-        String path = "src/main/resources/public/img/" + filename;//路径
+        String path = null;//路径
 
-        try {
-            Base64FileUtils.GenerateImage(file, path);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        for (Session session : Chat.userUsernameMap.keySet()) {
+        //图片的操作：
+        if (filename.contains(".jpg") || filename.contains(".jpeg") || filename.contains(".png")) {
+            path = "src/main/resources/public/img/" + filename;
             try {
-                session.getRemote().sendString(String.valueOf(new JSONObject()
-                        .put("userMessage", createHtmlImgFromSender(userUsernameMap.get(sender), "img/" + filename))//userMessage是一个HTML标签
-                        .put("userlist", userUsernameMap.values())
-                ));
-            } catch (IOException e) {
+                Base64FileUtils.GenerateImage(file, path);
+            } catch (Exception e) {
                 e.printStackTrace();
+            }
+
+            for (Session session : userUsernameMap.keySet()) {
+                try {
+                    session.getRemote().sendString(String.valueOf(new JSONObject()
+                            .put("userMessage", createHtmlImgFromSender(sender, "img/" + filename))//userMessage是一个HTML标签
+                            .put("userlist", userUsernameMap.values())
+                    ));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            //文件的操作
+            path = "src/main/resources/public/file/" + filename;
+            try {
+                Base64FileUtils.GenerateImage(file, path);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            for (Session session : userUsernameMap.keySet()) {
+                try {
+                    session.getRemote().sendString(String.valueOf(new JSONObject()
+                            .put("userMessage", createHtmlFileFromSender(sender, "file/" + filename, filename))//userMessage是一个HTML标签
+                            .put("userlist", userUsernameMap.values())
+                    ));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
 
     //Builds a HTML element with a sender-name, a message, and a timestamp,
+    //展示字符串
     private static String createHtmlMessageFromSender(String sender, String message) {
         //返回一个HTML标签，这样的形式：
         // <article>
@@ -88,6 +112,7 @@ public class Chat {
     }
 
     //Builds a HTML element with a sender-name, a file-path, and a timestamp,
+    //展示图片
     private static String createHtmlImgFromSender(String sender, String path) {
         return article(
                 b(sender + " says:"),
@@ -97,11 +122,12 @@ public class Chat {
     }
 
     //Builds a HTML element with a sender-name, a file-path, and a timestamp,
-   /* private static String createHtmlFileFromSender(String sender, String path) {
+    //展示文件
+    private static String createHtmlFileFromSender(String sender, String path, String filename) {
         return article(
                 b(sender + " says:"),
                 span(attrs(".timestamp"), new SimpleDateFormat("HH:mm:ss").format(new Date())),
-                a("file_name").withHref("file_path")
+                a(filename).withHref(path)
         ).render();
-    }*/
+    }
 }
