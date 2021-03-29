@@ -72,7 +72,37 @@ li {
 }
 
 @keyframes enter {
-    from { transform: none;        }
-    50%  { transform: scale(1.05); }
-    to   { transform: none;        }
+    from {
+        transform: none;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    to {
+        transform: none;
+    }
 }
+
+img, video {
+    max-width: 200px;
+    max-height: 200px;
+}
+
+audio {
+    max-width: 250px;
+    max-height: 200px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+h4 {
+    text-align: center;
+    background: #EFEFEF;
+    height: 30px;
+    font-weight: normal;
+    font-family: 微软雅黑;
+}
+

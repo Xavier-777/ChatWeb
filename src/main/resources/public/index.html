@@ -1,20 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>WebsSockets</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <div id="chatControls">
     <input id="message" placeholder="Type your message">
     <button id="send">Send</button>
-    <!-- 只接收图片 -->
-    <input id="file" type="file">
+    <form id="upload_form" method='post' enctype='multipart/form-data'>
+        <input id="upload_file" type='file' name='uploaded_file'>
+        <input id="upload_btn" type="button" value="send file"/>
+    </form>
+    <h4 id="a_container">
+        <a id="start_rtc" href="basicVideoCall/basicVideoCall.html" target="_blank"> start trc </a>
+    </h4>
 </div>
+
 <ul id="userlist"> <!-- Built by JS --> </ul>
 <div id="chat">    <!-- Built by JS --> </div>
 
+<script src="./assets/jquery-3.4.1.min.js"></script>
 <script src="websocketDemo.js"></script>
 </body>
 </html>
